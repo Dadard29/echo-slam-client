@@ -1,9 +1,9 @@
 package main
 
 import (
+	"echo-slam-client/backend/log"
 	"encoding/json"
 	"fmt"
-	"github.com/mitchellh/go-homedir"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -13,15 +13,19 @@ const defaultHost = "https://api.echo-slam.com"
 const configFilePath = ".config/echo-slam/echo-slam.json"
 
 // access the user config
-type Accessor struct {
+type Config struct {
 	path string
 
-	Host     string
-	Username string
-	JWT      string
+	Host     string `json:"host"`
+	Username string `json:"username"`
+	JWT      string `json:"JWT"`
 }
 
-func (a *Accessor) Save() error {
+func (a *Config) Self() *Config {
+	return a
+}
+
+func (a *Config) Save() error {
 	data, err := json.MarshalIndent(a, "", "\t")
 	if err != nil {
 		return err
@@ -30,15 +34,15 @@ func (a *Accessor) Save() error {
 	return ioutil.WriteFile(a.path, data, 0644)
 }
 
-func LoadConfig(configFile string) (*Accessor, error) {
-	Info(fmt.Sprintf("loading existing config at %s", configFile))
+func LoadConfig(configFile string) (*Config, error) {
+	log.Info(fmt.Sprintf("loading existing config at %s", configFile))
 
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		return nil, err
 	}
 
-	var accessor = &Accessor{}
+	var accessor = &Config{}
 	err = json.Unmarshal(data, accessor)
 	if err != nil {
 		return nil, err
@@ -49,10 +53,10 @@ func LoadConfig(configFile string) (*Accessor, error) {
 	return accessor, nil
 }
 
-func NewConfig(configFile string) (*Accessor, error) {
-	Info(fmt.Sprintf("setting up new config at %s", configFile))
+func NewConfig(configFile string) (*Config, error) {
+	log.Info(fmt.Sprintf("setting up new config at %s", configFile))
 
-	newAccessor := &Accessor{
+	newAccessor := &Config{
 		path:     configFile,
 		Host:     defaultHost,
 		Username: "",
@@ -70,28 +74,4 @@ func NewConfig(configFile string) (*Accessor, error) {
 		return nil, err
 	}
 	return newAccessor, nil
-}
-
-func SetAccessor() error {
-	h, err := homedir.Dir()
-	if err != nil {
-		return err
-	}
-
-	configFile := filepath.Join(h, configFilePath)
-	if _, err := os.Stat(configFile); os.IsNotExist(err) {
-		// config file not exist
-		Config, err = NewConfig(configFile)
-		if err != nil {
-			return err
-		}
-	} else {
-		// config file exists
-		Config, err = LoadConfig(configFile)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
 }

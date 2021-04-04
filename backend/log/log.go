@@ -1,4 +1,4 @@
-package main
+package log
 
 import (
 	"github.com/fatih/color"
@@ -19,4 +19,9 @@ func Error(err error) {
 	color.Set(color.FgRed)
 	log.Println(err.Error())
 	color.Unset()
+}
+
+func Fatal(err error) {
+	color.Set(color.FgHiRed)
+	log.Fatalln(err.Error())
 }

@@ -1,13 +1,10 @@
 package main
 
 import (
+  "echo-slam-client/backend/log"
   "github.com/leaanthony/mewn"
   "github.com/wailsapp/wails"
 )
-
-func GetConnector() *EchoSlam {
-  return Connector
-}
 
 func getApp() *wails.App {
 
@@ -22,21 +19,19 @@ func getApp() *wails.App {
     CSS:    css,
     Colour: "#131313",
   })
-  app.Bind(GetConnector())
+
+  app.Bind(Accessor)
+  app.Bind(EchoSlam)
 
   return app
 }
 
 func main() {
-  if err := SetAccessor(); err != nil {
-    Error(err)
-  }
-
-  SetConnector()
+  setAccessorConnector()
 
   app := getApp()
 
   if err := app.Run(); err != nil {
-   Error(err)
+   log.Error(err)
   }
 }
