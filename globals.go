@@ -1,15 +1,15 @@
 package main
 
 import (
+	"echo-slam-client/backend"
 	"echo-slam-client/backend/log"
 	"fmt"
 	"github.com/mitchellh/go-homedir"
-	"net/http"
 	"os"
 	"path/filepath"
 )
 
-var EchoSlam *Connector
+var EchoSlam Connector
 var Accessor *Config
 
 
@@ -38,11 +38,8 @@ func setAccessor() error {
 }
 
 func setConnector() {
-	EchoSlam = &Connector{
-		client:    &http.Client{},
-		Host:      Accessor.Host,
-		JWT:       Accessor.JWT,
-		Connected: Accessor.JWT != "",
+	EchoSlam = &ConnectorImplement{
+		client: backend.NewApiClient(Accessor.Host, Accessor.JWT, Accessor.JWT != ""),
 	}
 	log.Info(fmt.Sprintf("setting up connector with api %s", Accessor.Host))
 }
@@ -61,22 +58,22 @@ func unsetAccessorConnector() {
 }
 
 
-func Connect(JWT string) {
+func Connect(username string, JWT string) {
 	Accessor.JWT = JWT
+	Accessor.Username = username
 	if err := Accessor.Save(); err != nil {
 		log.Error(err)
 	}
 
-	EchoSlam.JWT = JWT
-	EchoSlam.Connected = true
+	EchoSlam.Client().Connect(JWT)
 }
 
 func Disconnect() {
 	Accessor.JWT = ""
+	Accessor.Username = ""
 	if err := Accessor.Save(); err != nil {
 		log.Error(err)
 	}
 
-	EchoSlam.JWT = ""
-	EchoSlam.Connected = false
+	EchoSlam.Client().Disconnect()
 }

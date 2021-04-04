@@ -60,14 +60,13 @@ func testConnectorSignIn(t *testing.T) {
 		t.Error(err)
 	}
 
-	assert.True(t, EchoSlam.Connected)
-	t.Logf("is connected: %v", EchoSlam.Connected)
+	assert.True(t, EchoSlam.Client().Connected())
 }
 
 func testConnectorSignInCheck(t *testing.T) {
 	err := EchoSlam.SignInCheck()
 
-	if EchoSlam.Connected {
+	if EchoSlam.Client().Connected() {
 		assert.True(t, err == nil, err)
 	} else {
 		assert.False(t, err == nil, err)
@@ -76,8 +75,7 @@ func testConnectorSignInCheck(t *testing.T) {
 
 func testConnectorLogOut(t *testing.T) {
 	EchoSlam.LogOut()
-	assert.False(t, EchoSlam.Connected)
-	assert.Equal(t, "", EchoSlam.JWT)
+	assert.False(t, EchoSlam.Client().Connected())
 }
 
 func testConnectorGetAvatarList(t *testing.T) {

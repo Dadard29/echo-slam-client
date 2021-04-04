@@ -15,7 +15,7 @@
 <script>
 import Navbar from "@/components/Navbar";
 import RouteView from "@/components/RouteView";
-import Ribbon from "@/components/Ribbon";
+import Ribbon from "@/components/ribbon/Ribbon";
 export default {
 name: "Main",
   components: {Ribbon, RouteView, Navbar}
