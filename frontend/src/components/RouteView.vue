@@ -1,5 +1,5 @@
 <template>
-  <div class="view">
+  <div class="container-fluid">
     <router-view/>
   </div>
 </template>
@@ -11,8 +11,8 @@ name: "RouteView"
 </script>
 
 <style scoped>
-.view {
-  padding: 30px;
-}
+/*.view {*/
+/*  padding: 30px;*/
+/*}*/
 
 </style>

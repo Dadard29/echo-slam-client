@@ -1,7 +1,6 @@
 package main
 
 import (
-	"echo-slam-client/backend"
 	"echo-slam-client/backend/models"
 )
 
@@ -9,9 +8,18 @@ type ConnectorMock struct {
 
 }
 
-func (c *ConnectorMock) Client() *backend.ApiClient {
-	return nil
+func (c *ConnectorMock) Connected() bool {
+	return false
 }
+
+func (c *ConnectorMock) Connect(JWT string) {
+	return
+}
+
+func (c *ConnectorMock) Disconnect() {
+	return
+}
+
 
 func (c *ConnectorMock) Infos() (*models.Infos, error) {
 	return &models.Infos{

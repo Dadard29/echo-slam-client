@@ -6,7 +6,9 @@ import (
 )
 
 type ConnectorInterface interface {
-	Client() *backend.ApiClient
+	Connected() bool
+	Connect(JWT string)
+	Disconnect()
 
 	Infos() (*models.Infos, error)
 	HealthApis() (*models.HealthApis, error)
@@ -28,8 +30,16 @@ type Connector struct {
 	client *backend.ApiClient
 }
 
-func (e *Connector) Client() *backend.ApiClient {
-	return e.client
+func (e *Connector) Connect(JWT string) {
+	e.client.Connect(JWT)
+}
+
+func (e *Connector) Disconnect() {
+	e.client.Disconnect()
+}
+
+func (e *Connector) Connected() bool {
+	return e.client.Connected()
 }
 
 

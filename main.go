@@ -34,6 +34,8 @@ func main() {
     setGlobals()
   }
 
+  ClientLogger.Info("init complete")
+
   app := getApp()
 
   if err := app.Run(); err != nil {

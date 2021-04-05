@@ -7,7 +7,7 @@ func Connect(username string, JWT string) {
 		ClientLogger.Error(err.Error())
 	}
 
-	EchoSlam.Client().Connect(JWT)
+	EchoSlam.Connect(JWT)
 }
 
 func Disconnect() {
@@ -17,5 +17,5 @@ func Disconnect() {
 		ClientLogger.Error(err.Error())
 	}
 
-	EchoSlam.Client().Disconnect()
+	EchoSlam.Disconnect()
 }

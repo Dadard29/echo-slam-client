@@ -2,6 +2,7 @@ package backend
 
 import (
 	"echo-slam-client/backend/log"
+	"echo-slam-client/backend/models"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -133,18 +134,17 @@ func (c *ApiClient) doRequestBase(req *http.Request, model interface{}) error {
 		return err
 	}
 
-	if resp.StatusCode != http.StatusOK {
-		return errors.New(
-			fmt.Sprintf(
-				"failed to make request to %s: %d",
-				resp.Request.URL.RawQuery, resp.StatusCode))
-	}
-
 	defer resp.Body.Close()
 
 	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		errResp := models.ErrorResponse{}
+		json.Unmarshal(data, &errResp)
+		return errors.New(errResp.Message)
 	}
 
 	err = json.Unmarshal(data, model)

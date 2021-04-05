@@ -4,6 +4,10 @@ import router from './router';
 import * as Wails from '@wailsapp/runtime';
 import 'bootstrap'
 
+document.title = "Echo-Slam"
+
 Wails.Init(() => {
-    createApp(App).use(router).mount('#app');
+    let app = createApp(App);
+    app.use(router);
+    app.mount('#app');
 });

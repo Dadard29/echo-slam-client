@@ -16,7 +16,7 @@ const endpointSignUp = "/signup"
 func (e *Connector) GetProfile() (*models.Profile, error) {
 
 	var profile = &models.ProfileResponse{}
-	err := e.Client().DoRequestProtectedJWT(endpointProfile, http.MethodGet, nil, profile)
+	err := e.client.DoRequestProtectedJWT(endpointProfile, http.MethodGet, nil, profile)
 	return &profile.Profile, err
 }
 
@@ -27,7 +27,7 @@ func (e *Connector) GetProfilePublic(username string) (*models.ProfilePublic, er
 	params := map[string]string{
 		"username": username,
 	}
-	err := e.Client().DoRequestProtectedJWT(endpointProfilePublic, http.MethodGet, params, profile)
+	err := e.client.DoRequestProtectedJWT(endpointProfilePublic, http.MethodGet, params, profile)
 	return &profile.ProfilePublic, err
 }
 
@@ -35,7 +35,7 @@ func (e *Connector) SignIn(username string, password string) error {
 
 	var signIn = &models.SignInResponse{}
 
-	err := e.Client().DoRequestProtectedBasic(
+	err := e.client.DoRequestProtectedBasic(
 		endpointSignIn, http.MethodGet, nil,
 		username, password, signIn)
 
@@ -51,7 +51,7 @@ func (e *Connector) SignInCheck() error {
 
 	var signInCheck = &models.SignInCheckResponse{}
 
-	err := e.Client().DoRequestProtectedJWT(
+	err := e.client.DoRequestProtectedJWT(
 		endpointSignIn, http.MethodPost, nil, signInCheck)
 	return err
 }
@@ -62,14 +62,14 @@ func (e *Connector) LogOut() {
 
 func (e *Connector) GetAvatarList() ([]string, error) {
 	var avatarList = &models.AvatarListResponse{}
-	err := e.Client().DoRequest(
+	err := e.client.DoRequest(
 		endpointAvatarList, http.MethodGet, nil, avatarList)
 	return avatarList.AvatarList, err
 }
 
 func (e *Connector) GetAvatarUrl(avatarName string) string {
 	return fmt.Sprintf("%s%s?name=%s",
-		e.Client().Host(), endpointAvatar, avatarName)
+		e.client.Host(), endpointAvatar, avatarName)
 }
 
 func (e *Connector) IsUsernameUsed(username string) (bool, error) {
@@ -77,7 +77,7 @@ func (e *Connector) IsUsernameUsed(username string) (bool, error) {
 	params := map[string]string{
 		"username": username,
 	}
-	err := e.Client().DoRequest(
+	err := e.client.DoRequest(
 		endpointProfilePublic, http.MethodPost, params, usernameCheckResponse)
 	return usernameCheckResponse.IsUsed, err
 }
@@ -92,7 +92,7 @@ func (e *Connector) SignUp(
 		"contact": contact,
 		"avatar": avatar,
 	}
-	err := e.Client().DoRequestProtectedBasic(
+	err := e.client.DoRequestProtectedBasic(
 		endpointSignUp, http.MethodPost, params,
 		username, password, signUpResponse)
 	return err
@@ -105,7 +105,7 @@ func (e *Connector) SignUpConfirm(
 	params := map[string]string{
 		"code": code,
 	}
-	err := e.Client().DoRequestProtectedBasic(
+	err := e.client.DoRequestProtectedBasic(
 		endpointProfile, http.MethodPost, params,
 		username, password, signUpConfirm)
 	return err
