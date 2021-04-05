@@ -13,14 +13,14 @@ const endpointAvatarList = "/avatar/list"
 const endpointAvatar = "/avatar"
 const endpointSignUp = "/signup"
 
-func (e *ConnectorImplement) GetProfile() (*models.Profile, error) {
+func (e *Connector) GetProfile() (*models.Profile, error) {
 
 	var profile = &models.ProfileResponse{}
 	err := e.Client().DoRequestProtectedJWT(endpointProfile, http.MethodGet, nil, profile)
 	return &profile.Profile, err
 }
 
-func (e *ConnectorImplement) GetProfilePublic(username string) (*models.ProfilePublic, error) {
+func (e *Connector) GetProfilePublic(username string) (*models.ProfilePublic, error) {
 
 	var profile = &models.ProfilePublicResponse{}
 
@@ -31,7 +31,7 @@ func (e *ConnectorImplement) GetProfilePublic(username string) (*models.ProfileP
 	return &profile.ProfilePublic, err
 }
 
-func (e *ConnectorImplement) SignIn(username string, password string) error {
+func (e *Connector) SignIn(username string, password string) error {
 
 	var signIn = &models.SignInResponse{}
 
@@ -47,7 +47,7 @@ func (e *ConnectorImplement) SignIn(username string, password string) error {
 	return err
 }
 
-func (e *ConnectorImplement) SignInCheck() error {
+func (e *Connector) SignInCheck() error {
 
 	var signInCheck = &models.SignInCheckResponse{}
 
@@ -56,23 +56,23 @@ func (e *ConnectorImplement) SignInCheck() error {
 	return err
 }
 
-func (e *ConnectorImplement) LogOut() {
+func (e *Connector) LogOut() {
 	Disconnect()
 }
 
-func (e *ConnectorImplement) GetAvatarList() ([]string, error) {
+func (e *Connector) GetAvatarList() ([]string, error) {
 	var avatarList = &models.AvatarListResponse{}
 	err := e.Client().DoRequest(
 		endpointAvatarList, http.MethodGet, nil, avatarList)
 	return avatarList.AvatarList, err
 }
 
-func (e *ConnectorImplement) GetAvatarUrl(avatarName string) string {
+func (e *Connector) GetAvatarUrl(avatarName string) string {
 	return fmt.Sprintf("%s%s?name=%s",
 		e.Client().Host(), endpointAvatar, avatarName)
 }
 
-func (e *ConnectorImplement) IsUsernameUsed(username string) (bool, error) {
+func (e *Connector) IsUsernameUsed(username string) (bool, error) {
 	var usernameCheckResponse = &models.UsernameCheckResponse{}
 	params := map[string]string{
 		"username": username,
@@ -82,7 +82,7 @@ func (e *ConnectorImplement) IsUsernameUsed(username string) (bool, error) {
 	return usernameCheckResponse.IsUsed, err
 }
 
-func (e *ConnectorImplement) SignUp(
+func (e *Connector) SignUp(
 	recoverBy string, contact string, avatar string,
 	username string, password string) error {
 
@@ -98,7 +98,7 @@ func (e *ConnectorImplement) SignUp(
 	return err
 }
 
-func (e *ConnectorImplement) SignUpConfirm(
+func (e *Connector) SignUpConfirm(
 	code string, username string, password string) error {
 
 	var signUpConfirm = &models.ProfileResponse{}

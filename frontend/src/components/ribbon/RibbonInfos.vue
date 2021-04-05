@@ -6,13 +6,12 @@
     <div v-else-if="infos !== null && loading === false">
       <span class="badge badge-primary">{{infos.Version}}</span>
     </div>
-    <div v-else-if="infos === null && loading === false">
-      <span class="badge badge-danger">OFFLINE</span>
-    </div>
   </div>
 </template>
 
 <script>
+import Backend from "@/backend";
+
 export default {
   name: "RibbonInfos",
   data() {
@@ -30,7 +29,7 @@ export default {
       self.loading = true;
       self.infos = null;
 
-      window.backend.Connector.Infos()
+      Backend.connector().Infos()
           .then(function(infos) {
             self.loading = false;
             self.infos = infos;

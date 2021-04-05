@@ -7,8 +7,10 @@ type HealthApisResponse struct {
 }
 
 type HealthApis struct {
-	List []struct {
-		APIName string `json:"api_name"`
-		Check   bool   `json:"check"`
-	} `json:"list"`
+	List []ApiCheck `json:"list"`
+}
+
+type ApiCheck struct {
+	APIName string `json:"api_name"`
+	Check   bool   `json:"check"`
 }

@@ -5,7 +5,7 @@ import (
 	"echo-slam-client/backend/models"
 )
 
-type Connector interface {
+type ConnectorInterface interface {
 	Client() *backend.ApiClient
 
 	Infos() (*models.Infos, error)
@@ -24,11 +24,11 @@ type Connector interface {
 	SignUpConfirm(code string, username string, password string) error
 }
 
-type ConnectorImplement struct {
+type Connector struct {
 	client *backend.ApiClient
 }
 
-func (e *ConnectorImplement) Client() *backend.ApiClient {
+func (e *Connector) Client() *backend.ApiClient {
 	return e.client
 }
 

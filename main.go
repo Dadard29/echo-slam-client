@@ -1,9 +1,9 @@
 package main
 
 import (
-  "echo-slam-client/backend/log"
   "github.com/leaanthony/mewn"
   "github.com/wailsapp/wails"
+  "os"
 )
 
 func getApp() *wails.App {
@@ -20,6 +20,7 @@ func getApp() *wails.App {
     Colour: "#131313",
   })
 
+  app.Bind(ClientLogger)
   app.Bind(Accessor)
   app.Bind(EchoSlam)
 
@@ -27,11 +28,15 @@ func getApp() *wails.App {
 }
 
 func main() {
-  setAccessorConnector()
+  if os.Getenv("DEBUG") == "1" {
+    setGlobalsMock()
+  } else {
+    setGlobals()
+  }
 
   app := getApp()
 
   if err := app.Run(); err != nil {
-   log.Error(err)
+    ClientLogger.Error(err.Error())
   }
 }

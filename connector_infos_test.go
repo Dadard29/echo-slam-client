@@ -6,7 +6,7 @@ import (
 )
 
 func TestConnectorInfos(t *testing.T) {
-	setAccessorConnector()
+	setGlobals()
 
 	t.Run("infos", testConnectorInfos)
 	t.Run("health", testConnectorHealthApis)

@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 let cssConfig = {};
 
 if (process.env.NODE_ENV == 'production') {

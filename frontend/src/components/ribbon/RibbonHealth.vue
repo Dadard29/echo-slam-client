@@ -3,15 +3,31 @@
     <span class="spinner-border spinner-border-sm"></span>
   </div>
   <div v-else-if="health !== null && loading === false">
-    <span v-if="up" class="badge badge-success">CONNECTED</span>
-    <span v-else class="badge badge-danger">API ERROR</span>
+    <span v-if="up" class="badge badge-success"
+          data-toggle="tooltip" data-placement="top"
+          title="Connection to services established">
+      CONNECTED
+    </span>
+    <span v-else class="badge badge-danger"
+          data-toggle="tooltip" data-placement="top"
+          title="Some services are not available at this time, some features may not be working properly">
+      API ERROR
+    </span>
   </div>
   <div v-else-if="health === null  && loading === false">
-    <span class="badge badge-danger">OFFLINE</span>
+    <span class="badge badge-danger"
+          data-toggle="tooltip" data-placement="top"
+          title="No internet connection can be established with the remote services">
+      OFFLINE
+    </span>
   </div>
 </template>
 
 <script>
+
+import Backend from "@/backend";
+import $ from "jquery";
+
 export default {
   name: "RibbonHealth",
   computed: {
@@ -45,10 +61,22 @@ export default {
       let self = this;
       self.loading = true;
       self.health = null;
-      window.backend.Connector.HealthApis()
+      Backend.connector().HealthApis()
         .then(function(h) {
           self.loading = false;
-          self.health = h.list
+          self.health = h.list;
+
+          $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+          })
+        })
+        .catch(function(err) {
+          self.loading = false;
+          console.log(err)
+
+          $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+          })
         })
     }
   }
@@ -56,5 +84,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

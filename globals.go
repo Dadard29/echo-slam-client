@@ -9,8 +9,9 @@ import (
 	"path/filepath"
 )
 
-var EchoSlam Connector
+var EchoSlam ConnectorInterface
 var Accessor *Config
+var ClientLogger *log.Logger
 
 
 func setAccessor() error {
@@ -37,19 +38,39 @@ func setAccessor() error {
 	return nil
 }
 
-func setConnector() {
-	EchoSlam = &ConnectorImplement{
-		client: backend.NewApiClient(Accessor.Host, Accessor.JWT, Accessor.JWT != ""),
-	}
-	log.Info(fmt.Sprintf("setting up connector with api %s", Accessor.Host))
+func setLogger() {
+	ClientLogger = log.NewLogger()
 }
 
-func setAccessorConnector() {
+func setConnector() {
+	EchoSlam = &Connector{
+		client: backend.NewApiClient(
+			Accessor.Host, Accessor.JWT, Accessor.JWT != "", ClientLogger),
+	}
+	ClientLogger.Info(fmt.Sprintf("using connector with api %s", Accessor.Host))
+}
+
+func setConnectorMock() {
+	EchoSlam = &ConnectorMock{}
+	ClientLogger.Info(fmt.Sprintf("using MOCK connector"))
+}
+
+func setGlobals() {
+	setLogger()
 	if err := setAccessor(); err != nil {
-		log.Fatal(err)
+		ClientLogger.Fatal(err)
 	}
 
 	setConnector()
+}
+
+func setGlobalsMock() {
+	setLogger()
+	if err := setAccessor(); err != nil {
+		ClientLogger.Fatal(err)
+	}
+
+	setConnectorMock()
 }
 
 func unsetAccessorConnector() {
@@ -58,22 +79,3 @@ func unsetAccessorConnector() {
 }
 
 
-func Connect(username string, JWT string) {
-	Accessor.JWT = JWT
-	Accessor.Username = username
-	if err := Accessor.Save(); err != nil {
-		log.Error(err)
-	}
-
-	EchoSlam.Client().Connect(JWT)
-}
-
-func Disconnect() {
-	Accessor.JWT = ""
-	Accessor.Username = ""
-	if err := Accessor.Save(); err != nil {
-		log.Error(err)
-	}
-
-	EchoSlam.Client().Disconnect()
-}

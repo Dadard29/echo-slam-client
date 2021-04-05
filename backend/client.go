@@ -12,15 +12,17 @@ import (
 
 type ApiClient struct {
 	client *http.Client
+	logger *log.Logger
 
 	host      string
 	JWT       string
 	connected bool
 }
 
-func NewApiClient(host string, jwt string, connected bool) *ApiClient {
+func NewApiClient(host string, jwt string, connected bool, logger *log.Logger) *ApiClient {
 	return &ApiClient{
 		client:    &http.Client{},
+		logger: logger,
 		host:      host,
 		JWT:       jwt,
 		connected: connected,
@@ -117,8 +119,8 @@ func (c *ApiClient) doRequestMiddleware(req *http.Request, model interface{}) er
 
 	err := c.doRequestBase(req, model)
 	if err != nil {
-		log.Error(err)
-		log.Debug(fmt.Sprintf("%v", model))
+		c.logger.Error(err.Error())
+		c.logger.Debug(fmt.Sprintf("%v", model))
 	}
 
 	return err

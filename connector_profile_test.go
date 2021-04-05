@@ -14,7 +14,7 @@ const newUsernameTest = "test_3"
 const newPasswordTest = "test_3test_3"
 
 func TestConnectorProfilePublic(t *testing.T) {
-	setAccessorConnector()
+	setGlobals()
 
 	t.Run("avatar list", testConnectorGetAvatarList)
 	t.Run("avatar URL", testConnectorGetAvatarUrl)
@@ -24,7 +24,7 @@ func TestConnectorProfilePublic(t *testing.T) {
 }
 
 func TestConnectorProfileProtected(t *testing.T) {
-	setAccessorConnector()
+	setGlobals()
 
 	t.Run("signIn", testConnectorSignIn)
 	t.Run("signIn check", testConnectorSignInCheck)

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"echo-slam-client/backend/log"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -35,7 +34,7 @@ func (a *Config) Save() error {
 }
 
 func LoadConfig(configFile string) (*Config, error) {
-	log.Info(fmt.Sprintf("loading existing config at %s", configFile))
+	ClientLogger.Info(fmt.Sprintf("loading existing config at %s", configFile))
 
 	data, err := ioutil.ReadFile(configFile)
 	if err != nil {
@@ -54,7 +53,7 @@ func LoadConfig(configFile string) (*Config, error) {
 }
 
 func NewConfig(configFile string) (*Config, error) {
-	log.Info(fmt.Sprintf("setting up new config at %s", configFile))
+	ClientLogger.Info(fmt.Sprintf("using new config at %s", configFile))
 
 	newAccessor := &Config{
 		path:     configFile,
