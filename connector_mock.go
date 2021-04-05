@@ -1,11 +1,16 @@
 package main
 
 import (
+	"echo-slam-client/backend"
 	"echo-slam-client/backend/models"
 )
 
 type ConnectorMock struct {
 
+}
+
+func (c *ConnectorMock) Client() *backend.ApiClient {
+	return nil
 }
 
 func (c *ConnectorMock) Connected() bool {
